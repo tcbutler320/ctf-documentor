@@ -1,69 +1,81 @@
-*Disclaimer: This is under developement. Once a full, CTF-ready version is ready to be rolled out, it will be launched as v1.0.
+*Disclaimer: This application is under developement. Once a full, CTF-ready version is ready to be rolled out, it will be launched as v1.0. 
 
-# ctf-automator
-One stop application for CTF's, create a project directory, run common pen-test scans, all in one place
+*Disclaimer 2: This application does not reflect on my employeer, as it is a personal project. 
 
-<img src="/images/ctf-scans.png" alt="drawing" width="800"/>
+# CTF Documentor Overview
+Run and save common enumeration and vulnerability scans for CTF competitions. Built on python and designed for Kali Linux.
+
+Home Dashboard: 
+![alt text](/images/ctf-scans.png "Nmap Scans in CTF Documentor")
+
+# Index
+- [CTF Documentor Overview](#ctf-documentor-overview)
+- [Index](#index)
+  - [Overview](#overview)
+  - [Getting Started](#getting-started)
+  - [System Requirements Requirements](#system-requirements-requirements)
+  - [Installation](#installation)
+  - [Running for the First Time](#running-for-the-first-time)
+  - [Use](#use)
+  - [Limitations](#limitations)
+  - [Dev Roadmap](#dev-roadmap)
+  - [Contributing](#contributing)
 
 ## Overview
-CTF Automator is a central hub for simple scanning and documentation often used during CTF boot2root competitions. It helps you organize your scans and places all enumeration information in an easy to use format. The CTF Automator includes, or will include the following features...
+CTF Documentor is a central hub for simple scanning and documentation often used during CTF boot2root competitions. It helps you organize your scans and places all enumeration information in an easy to use format.
 
-1. Create CTF Project folder and txt files for important information like the output of scans, flags, found vulnerabilities, etc.
-2. Use pre-configured buttons to simply run automated scans for target discovery, port and service scanning, vulnerability mapping, exploits, etc.
-3. Parse output of commonly used tools with python for keywords/phrases
-4. Create a uniformed system of operations to simplify team sharing when competing with groups
+## Getting Started
+CTF Documentor was built and intended to be used on the latest version of Kali Linux for virtualbox. At the time of this release you can download this image [here](https://www.offensive-security.com/kali-linux-vm-vmware-virtualbox-image-download/)
 
-## Requirements
-CTF Automator is designed to be run on Kali Linux. It's been tested on Kali and should work fine. While it will work on other unix distributions, be aware that the layout and UI will be very different. This tool was not intended to be run outside of Kali Linux, and its capabilities and ease of use will vary greatly depending on which version its run in. I will add os handling in later versions.
+## System Requirements Requirements
+
+1) Kali Linux for Virtual Box and the following programs
+    A) Nmap, Dirb, arp-scan, dirb, sparta, netdiscover
+
+## Installation
+To get started, launch your kali linux machine in Virtualbox. Make sure to give your machine an internet connection by enabling the NAT adaptor and having internet conmnection to your local machine. 
+
+In the terminal of your linux machine change directories to your desktop by entering,
+
+        cd Desktop
+
+Then, clone the repository to your desktop with the command,
+
+        git clone https://github.com/tcbutler320/CTF-Documentor
+
+## Running for the First Time
+To open and run the application, navigate inside the directory with the terminal command 
+
+        cd CTF-Documentor 
+
+Run the program with 
+
+        python ./automator-gui.py
+
+The program is up and running properly if you are greeted with this home dashboard 
+
+Home Dashboard: 
+![alt text](/images/home-dashboard.png "Nmap Scans in CTF Documentor")
 
 ## Use
-Clone the repository to your local machine. To run, navigate inside the folder and type (python automator-gui.py). The first thing you should do is create a project using the button on the left frame. Enter a project name in the popup window (keep in mind this is the only way to get started, as the import project function is not finished yet). After you click create, exit out of the popup window.
+Before launching enumeration or vulnerability scans,you first must create a project using the new project button. 
 
-The first time to do is use the target discovery tools located on the bottom tool panel. The only tool currently set up is the arp-scan function. Run arp-scan to get a list of targets on your local network. Keep in mind that if you have several network interfaces up and running, arp-scan might not give you the targets your looking for. The output of the scan will be placed in the main output panel above. All scan output will also be saved in a text file in your project directory for later reference.
+Creating a Project: 
+![alt text](/images/create-project.png "Creating a project")
 
-Navigate over to the port scan tab. Enter one of the targets above into the "set target" entry box. Click add targets to add the target to your scope. Now you can run an nmap scan. The two functions currently working are nmap and intense nmap. Click on these to run.
+After creating a project, you will need to add a target to the project scope in order to conduct any scanning. There are two ways to do this. Navigate over to the target discvory tab on the tools bar in the bottom of the dashboard. Using the arp-scan button will search your connected network for IP's found in address resolution protocol communications. You can add one of these IP's to the project scope by navigating to the port scan tab, and entering the ip into the feild below and clicking set target
+
+Adding a Target to Scope: 
+![alt text](/images/ctf-scans.png "Adding an IP to scope")
+
+With a target set, you are now able to use the pre-set enuneration buttons for a variety of scans. Nmap, Nmap Intense, and Nmap UDP are pre-defined nmap scans which can be activated by presses the button.
+
 
 ## Limitations
-Not all functions or buttons are currently running. This project is being developed in an ad-hoc manner, and I am not only learning the basics of python, but also UI design and software developement.
-
-## What works vs What Doesn't
-Not every feature you see on CTF automator is currently supported.
-
-### What Works
-Create project : Create a project folder and a scans and flag txt files.
-Arp-scan : Arp scan network for potential targets
-Set Target : Choose an IPv4 address to set as a target machine
-Nmap Scan : Run a quick nmap scan of the target (nmap -T 5 [target])
-Nmap Intense: Run an intense nmap scan of the target for all ports, service and version discovery (nmap -sS -sV -A -O -p- [target])
-Add Flag: Enter a flag, add to flag.txt
-Help Output: A text output on the lefthand panel to tell you the status of commands
-Home Output: A text output on the middle page to display usefull output of scans
-
-### What doesn't work
-Open a project : Almost complete
-Netdiscover : Not started
-Net Stat : Not started
-Nmap UDP : Not started
-Linux Enumeration : Not started
-Chat : Not started
-Settings: Not started
-Compromat : Not started
-About : Not started
-
-
-## Contributions
-Feel free to contribute as desired. Looking for issues and feature requests.
+For the time being, the CTF Documentor only runs in Kali Linux.
 
 ## Dev Roadmap
-The first working branch of this project (v1.0), should be released in early June 2019. Below is a list of known features and issues to be included.
-1. Separate GUI and logic.py files
-2. Add error handling and exception for functions
-3. Add multiple OS support with sys module
-4. Add tkinter menu
-5. Update UI with branding/color
-6. Create config file for custom user settings
-7. Add support for more scanning tools
+Check back often for updated informaiton about the development roadmap for this project. I am using this project as a template and repository for learning software design, devops, penetration testing, and CTFs
 
-## UI application
-See the below rough sketch of what the final UI will look like
-<img src="/images/UI-plan" alt="drawing" width="800"/>
+## Contributing 
+If your interested in contributing to the project, feel free to do so on your on terms. You may reach out on twitter or other platforms for questions or ideas for enhancements.
