@@ -1,0 +1,435 @@
+#!/usr/bin/python
+
+# CTF Automator, the one stop shop tool for CTF's
+# Created by the arpbadger
+
+# Import modules
+from Tkinter import *
+import ttk
+import subprocess
+import os
+import sys
+from datetime import datetime
+from PIL import ImageTk, Image
+
+# Define Global Variable
+about = 'Welcome to the CTF Automator\n\nThis tool is designed simplify your organization for CTF boot to root events. Creating a new project in CTF Automator will create a new project direcory, and appropriate files. It allows you to perform your scans and dump them into neatly formatted txt files.\n\nWhen your ready to review the output of your scans, CTF Automtor provides an easy way to review what youve done.\n\nHelp Running CTF Automator\n\nFor help, see the readme.me or the help infomrmation on this projects GitHub page.'
+project_name = ""
+target = ""
+rawflag = []
+path = ""
+date = ""
+
+#### Program Functions ####
+
+
+# Quit the program
+def quit_command():
+    sys.exit()
+    return()
+
+# Get a flag from the user, add it to the flag.txt file and the flag display
+def add_flag():
+    global rawflag
+    flag_buffer = ""
+    if True:
+        flag_buffer = flags_entry.get()
+        with open(project_name+'/'+'flags.txt','a') as f:
+            f.write('Flags found:  '+flag_buffer+'\n\n=================================\n\n')
+            f.close()
+        help_text.insert("1.0","Flag added\n\n")
+        flags_text.insert("1.0","Flag Found:  "+flag_buffer+"\n\n")
+    else:
+        help_text.insert("1.0","{!} Error Adding Flag")
+        return
+    return
+
+# Send a flag to a flag server for CTF competitions, function not supported yet
+def send_flag():
+    help_text.insert("1.0","Send Flag not supported!\nIf you'd like, contribute to this project\n\n")
+    return
+
+# On user command, open a new window to enter a project name and directory location
+def popup_newproject():
+    global project_name
+    global date
+    date = datetime.today().strftime('%y-%m-%d')
+    def create():
+        global project_name
+        project_name = project_entry.get()
+        if len(project_name) > 0 :
+            help_text.insert("1.0","Creating Project...\n")
+            os.mkdir(project_name)
+            with open(project_name+'/scans.txt','w') as f:
+                f.write('Date: '+date+'\nCTF Automator\nNew Project: '+project_name+'\n\nScans\n\n')
+                f.close()
+            help_text.insert("1.0","Created output file\n")
+            with open(project_name+'/'+'flags.txt','w') as f:
+                f.write('Date'+date+'\nCTF Automator\nNew Project: '+project_name+'\n\nFlags\n\n')
+                f.close()
+            help_text.insert("1.0","Created flag file\n")
+            cmd =['pwd']
+            directory = subprocess.check_output(cmd)
+            help_text.insert("1.0","""Project located at """+directory+"""Project ''"""+project_name+"""' Created!\n""")
+            new_project.destroy
+            return
+        else:
+            help_text.tag_config('RED', foreground='red')
+            help_text.insert("1.0","You must enter a project name\n","RED")
+            return
+
+    new_project = Toplevel(height=150,width=350)
+    new_project.title('Create New Project')
+    enter_project_label = Label(new_project, text='Enter Project Name')
+    enter_project_label.place(x=5,y=5)
+    project_entry= Entry(new_project)
+    project_entry.place(x=155,y=5)
+    enter_location_label= Label(new_project,text='Enter Save Location')
+    enter_location_label.place(x=5,y=55)
+    location_entry= Entry(new_project)
+    location_entry.insert(END,'Default is current directory')
+    location_entry.place(x=155,y=55)
+    create_button= Button(new_project,text='Create Project',command=create)
+    create_button.place(x=5,y=85)
+    new_project.destroy
+    return()
+
+# On uper command, open a new window to choose an existing project to continue working on
+def popup_openproject():
+	global path
+	def open_project():
+		global path
+		path = open_entry.get()
+		help_text.insert("1.0","Changing Directory....\n")
+		os.chdir(path)
+		help_text.insert("1.0","Directory changed to"+path+"\n")
+		return
+
+	openproject = Toplevel(height=150,width=350)
+	openproject.title('Open Project')
+	open_project_label = Label(openproject, text='Path to Project')
+	open_project_label.place(x=5,y=5)
+	open_entry= Entry(openproject)
+	open_entry.place(x=115,y=5)
+	open_button= Button(openproject,text='Open',command=open_project)
+	open_button.place(x=85,y=40)
+	return
+
+# On button click, run arp-scan to find targets on network, print to display and text file
+def arp_scan():
+    global project_name
+    help_text.insert("1.0","Running Arp-Scan...\n")
+    cmd =['arp-scan','-l']
+    returned_value = subprocess.check_output(cmd)
+    output_text.insert("1.0",returned_value.decode("utf-8"))
+    write_value = str(returned_value.decode("utf-8"))
+    print(write_value)
+    if 1 == 1:
+        with open(project_name+'/scans.txt','a') as f:
+            f.write('\nARP Scan Results\n\n=============================\n\n')
+            f.write(write_value)
+            help_text.insert("1.0","Targets Acquire,Located in Outut\n")
+            f.close()
+        return()
+    return()
+
+# Get user input ipv4 address and set it to the target global variable
+def add_target():
+    global target
+    target = target_entry.get()
+    if len(target) > 0 :
+        help_text.insert("1.0","Setting Target...\n")
+        os.mkdir(project_name)
+        with open(project_name+'/scans.txt','w') as f:
+            f.write('CTF Badger\nNew Targe Added:'+target)
+            f.close()
+        return()
+    else:
+        help_text.tag_config('RED', foreground='red')
+        help_text.insert("1.0","You must enter a target\n","RED")
+        return()
+
+# Run an nmap scan against the target, if no target was selected, tell the user to enter a target or get help
+def nmap_target():
+    global target
+    help_text.insert("1.0","Running Nmap\n")
+    target = target_entry.get()
+    if len(target) > 0:
+        cmd =['nmap',target]
+        returned_value = subprocess.check_output(cmd)
+        output_text.insert("1.0",returned_value.decode("utf-8"))
+        write_value = str(returned_value.decode("utf-8"))
+        with open(project_name+'/scans.txt','a') as f:
+            f.write('\nNmap Scan Results\n=========================================\n\n')
+            f.write(write_value)
+            f.close()
+        help_text.insert("1.0","Nmap done! Check Output Tab\n")
+        return()
+    else:
+        help_text.tag_config('RED', foreground='red')
+        help_text.insert("1.0","Enter a valid Target\n","RED")
+
+# Run a more intense nmap scan
+def nmap_intense():
+    global target
+    help_text.insert("1.0","Running Intense Nmap\n")
+    target = target_entry.get()
+    st_target = str(target)
+    cmd2 = ['nmap','-sS','-sV','-A',st_target]
+    if len(target) > 0:
+        returned_value = subprocess.check_output(cmd2)
+        output_text.insert("1.0",returned_value.decode("utf-8"))
+        write_value = str(returned_value.decode("utf-8"))
+        with open(project_name+'/scans.txt','a') as f:
+            f.write('\nIntense Nmap Scan Results\n=========================================\n\n')
+            f.write(write_value)
+            f.close()
+        help_text.insert("1.0","Nmap done! Check Output Tab\n")
+        return()
+    else:
+        help_text.tag_config('RED', foreground='red')
+        help_text.insert("1.0","Enter a valid Target\n","RED")
+
+# Run an nmap scan for UDP ports
+def nmap_udp():
+    help_text.insert("1.0","Scanning UDP ports wth Nmap\n")
+    target = target_entry.get()
+    st_target = str(target)
+    cmd2 = ['nmap','-sU','''-p-''',st_target]
+    if len(target) > 0:
+        returned_value = subprocess.check_output(cmd2)
+        output_text.insert("1.0",returned_value.decode("utf-8"))
+        write_value = str(returned_value.decode("utf-8"))
+        with open(project_name+'/scans.txt','a') as f:
+            f.write('\nUDP Nmap Scan Output\n=========================================\n\n')
+            f.write(write_value)
+            f.close()
+        help_text.insert("1.0","UDP Ports Scanned!\n")
+        return()
+    else:
+        help_text.tag_config('RED', foreground='red')
+        help_text.insert("1.0","Enter a valid Target\n","RED")
+
+# Print some helpful information
+def helpme():
+    help_text.insert("1.0","Open the readme file for more information. This is a pre-release version of ctf automator, not all features you see are currently supported. Consider making contributions to the project")
+    return()
+
+# Run dirb against a target to enumerate web servers, find hidden web directories
+def dirb():
+    global target
+    help_text.insert("1.0","Running Dirb\n")
+    target = target_entry.get()
+    dirb_target = str('http://'+target)
+    help_text.insert("1.0","Running Dirb Command: "+dirb_target)
+    if len(target) > 0:
+        cmd =['dirb',dirb_target, '-S']
+        returned_value = subprocess.check_output(cmd)
+        output_text.insert("1.0",returned_value.decode("utf-8"))
+        write_value = str(returned_value.decode("utf-8"))
+        with open(project_name+'/scans.txt','a') as f:
+            f.write('\nDirb Results\n=========================================\n\n')
+            f.write(write_value)
+            f.close()
+        help_text.insert("1.0","Dirb Complete! Check Output Tab\n")
+        return()
+    else:
+        help_text.tag_config('RED', foreground='red')
+        help_text.insert("1.0","Enter a valid Target\n","RED")
+    return
+
+# Run sparta, this just opens sparta and does not add to project files
+def sparta():
+
+    help_text.insert("1.0","Opening Sparta\n")
+    cmd =['sparta']
+    subprocess.check_output(cmd)
+    return
+
+def netdiscover():
+    return
+
+def quit():
+    sys.exit()
+
+#### Gui Configurations ####
+
+# Main Gui
+main = Tk()
+main.title('CTF Automator')
+main.geometry('820x800')
+
+# set style params
+style = ttk.Style()
+style.configure('My.TFrame', background='#e8e8e8')
+style.configure('My.TButton', background='#e0e0e0',foreground='#000000')
+style.configure('My.TLabel',background='#535353',foreground='#000000')
+
+# create a menu bar
+menubar = Menu(main)
+project_menu = Menu(menubar, tearoff=0)
+project_menu.add_command(label="Create New",command=popup_newproject)
+project_menu.add_command(label="Open",command="open_command")
+project_menu.add_command(label="Send Project",command="send_project")
+menubar.add_cascade(label='Edit',menu=project_menu)
+menubar.add_command(label='Quit',command=quit_command)
+flags_menu = Menu(menubar,tearoff=0)
+flags_menu.add_command(label='Add Flag',command=add_flag)
+flags_menu.add_command(label='Send Flag',command=send_flag)
+menubar.add_cascade(label='Flags',menu=flags_menu)
+menubar.add_command(label='Help',command=helpme)
+main.config(menu=menubar)
+
+# Main Gui Window
+
+# Main Left Frame
+left_frame= Frame(main,width=200,height=800)
+left_frame.place(x=0,y=0)
+left_top_frame= Frame(left_frame,width=200,height=100)
+left_top_frame.place(x=0,y=0)
+
+# Help Output Text Bar and Label
+help_text_label = Label(left_frame,text='Help Bar')
+help_text_label.place(x=10,y=195)
+help_text = Text(left_frame,bg='white',fg='black',height=20,width=20,wrap=WORD)
+help_text.insert(INSERT,'Welcome to the CTF Automator!\n\nStart by creating a new project.This is where useful information will be printed when you run commands.The useful output of scans will show up on your right.\n\n If you need help, click the help button or visit the readme at https://github.com/arpbadger/CTF-automator')
+help_text.place(x=10,y=215)
+
+# Add logo image to main window
+path = 'logo.png'
+imgpath = 'logo.png'
+img = PhotoImage(file=imgpath)
+img = img.subsample(3)
+
+project_name_label = Label(left_frame, image=img)
+project_name_label.config(font=("Courier", 20))
+project_name_label.place(x=2 ,y=10)
+
+# Main Buttons
+new_project_button= ttk.Button(text='New Project',style='My.TButton',command=popup_newproject)
+new_project_button.place(x=2,y=150)
+open_project_button= ttk.Button(text='Open Project',style='My.TButton', command=popup_openproject)
+open_project_button.place(x=100,y=150)
+
+# Main Botton Frame
+botton_title_frame= Frame(main,width=600,height=20)# bg='grey12',
+botton_title_frame.place(x=200,y=425)
+
+# Bottom Tools Label
+tools_label= Label(botton_title_frame,text='Tools',fg='#000000')#,bg='grey12',
+tools_label.place(x=0,y=0)
+
+# This was from overstack, not sure why its needed, but it breaks if this isnt here lol
+rows = 0
+while rows < 50:
+    main.rowconfigure(rows,weight=1)
+    main.columnconfigure(rows,weight=1)
+    rows += 1
+
+# Configure the notebook Settings
+# Top Output Notebook
+nb = ttk.Notebook(main,width=600,height=400)
+nb.place(x=200,y=0)
+
+# Page 1:Home Page
+home= ttk.Frame(nb,style='My.TFrame')
+nb.add(home, text='Main')
+output_text = Text(home,bg='white',fg='black',height=400,width=200,wrap=WORD)
+output_text.insert(INSERT,"You'll see the output of your scans here\n")
+output_text.place(x=0,y=0)
+
+# Page 2: Flags
+flags= ttk.Frame(nb)
+nb.add(flags,text='Flags')
+flags_text = Text(flags,bg='white',fg='black',height=400,width=600,wrap=WORD)
+flags_text.insert(INSERT,'Found Flags will be added here\n')
+flags_text.place(x=0,y=0)
+
+# Page 3: Compromat
+compromat = ttk.Frame(nb)
+nb.add(compromat,text='Compromat')
+compromat_text = Text(compromat,bg='white',fg='black',height=400,width=600,wrap=WORD)
+compromat_text.insert(INSERT,"""The Compromat is a selection of all the compromising materials you've found. This includes things like vulnerabilities, backdoors, usernames and passwords, etc\n""")
+compromat_text.place(x=0,y=0)
+
+# Page 4: Chat
+page4= ttk.Frame(nb)
+nb.add(page4, text='Chat')
+
+# Page 5: About
+about= ttk.Frame(nb)
+nb.add(about, text='About')
+about_text = Text(about,bg='white',fg='black',height=400,width=600,wrap=WORD)
+about_text.insert(INSERT,"This is the about page\n")
+about_text.place(x=0,y=0)
+
+# Page 6: Settings
+settings= ttk.Frame(nb)
+nb.add(settings, text='Settings')
+
+# Botton Tools Notebook
+nb_tools = ttk.Notebook(main,width=600,height=380)
+nb_tools.place(x=200,y=445)
+
+# Target Discovery Tools Page for Bottom Notebook
+discovery= ttk.Frame(nb_tools,style='My.TFrame')
+nb_tools.add(discovery, text='Target Discovery')
+discover_frame= Frame(discovery,height=110,width=600)#bg='grey50'
+discover_frame.place(x=0,y=0)
+arp_button= Button(discover_frame, text='Arp Scan',command=arp_scan)
+arp_button.place(x=5,y=5)
+netdiscover_button= Button(discover_frame, text='Net Discover')
+netdiscover_button.place(x=105,y=5)
+netstat_button= Button(discover_frame, text='Net Stat')
+netstat_button.place(x=235,y=5)
+
+# Port and Service Scan for Bottom Notebook
+port_scan= ttk.Frame(nb_tools,style='My.TFrame')
+nb_tools.add(port_scan, text='Port Scan')
+portscan_frame= Frame(port_scan,height=110,width=600)#bg='grey50'
+portscan_frame.place(x=0,y=0)
+target_entry = Entry(port_scan)
+target_entry.place(x=135,y=50)
+target_elable= Label(port_scan,text='Enter Target')
+target_elable.place(x=1,y=50)
+set_target_button= Button(portscan_frame,text='Set Target',command=add_target)
+set_target_button.place(x=335,y=50)
+nmap_button= Button(portscan_frame, text='Nmap',command=nmap_target)
+nmap_button.place(x=5,y=5)
+nmap_button= Button(portscan_frame, text='Nmap Intense',command=nmap_intense)
+nmap_button.place(x=105,y=5)
+nmap_button= Button(portscan_frame, text='Nmap UDP', command=nmap_udp)
+nmap_button.place(x=235,y=5)
+
+# Flag tab for bottom notebook
+flags = ttk.Frame(nb_tools,style='My.TFrame')
+nb_tools.add(flags, text='Flags')
+flags_frame = Frame(flags,height=110,width=600)#bg='grey50'
+flags_frame.place(x=0,y=0)
+flags_entry = Entry(flags)
+flags_entry.place(x=100,y=30)
+flags_lable= Label(flags,text='Enter flag')
+flags_lable.place(x=1,y=30)
+flags_button = Button(flags,text='Add Flag',command=add_flag)
+flags_button.place(x=100,y=60)
+
+# Tools for Linux Enumeration
+linux_enum = ttk.Frame(nb_tools, style='My.TFrame')
+nb_tools.add(linux_enum,text= 'Enumeration')
+linux_frame = Frame(linux_enum, height= 110, width =600)
+linux_frame.place(x=0,y=0)
+enum1 = Button(linux_frame,text='Bash Badger Script',command='run_bashbadger')
+enum1.place(x=5,y=5)
+enum2 = Button(linux_frame,text='Dirb',command=dirb)
+enum2.place(x=200,y=5)
+
+# Other random tools
+other_tools = ttk.Frame(nb_tools, style='My.TFrame')
+nb_tools.add(other_tools,text= 'Other Tools')
+other_frame = Frame(other_tools, height= 110, width =600)
+other_frame.place(x=0,y=0)
+sparta_button = Button(other_tools,text='Sparta',command=sparta)
+sparta_button.place(x=5,y=5)
+
+# Start Gui
+main.mainloop()
