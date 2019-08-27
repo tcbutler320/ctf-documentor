@@ -296,8 +296,8 @@ help_text.insert(INSERT,'Welcome to the CTF Automator!\n\nStart by creating a ne
 help_text.place(x=10,y=215)
 
 # Add logo image to main window
-path = 'guy_on_computer.jpg'
-imgpath = 'guy_on_computer.jpg'
+path = 'guy_on_computer.png'
+imgpath = 'guy_on_computer.png'
 img = PhotoImage(file=imgpath)
 img = img.subsample(3)
 
