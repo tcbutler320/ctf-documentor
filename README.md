@@ -1,4 +1,7 @@
 # CTF Documentor 
+
+![alt text](header-image.png "Header Image")
+
 The CTF Documentor is a GUI python application designed to better facilitate the documentation that often accompanies CTF boot to root competitions. It combines two essential functionalities; running common enumeration and vulnerability scans natively in the application, and automatically documenting and displaying those scans.
 
 ![alt text](/images/ctf-scans.png "Nmap Scans in CTF Documentor")
