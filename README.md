@@ -3,9 +3,9 @@ The CTF Documentor is a GUI python application designed to better facilitate the
 
 ![alt text](/images/ctf-scans.png "Nmap Scans in CTF Documentor")
 
-# Readme Index
+# Index
 - [CTF Documentor](#ctf-documentor)
-- [Readme Index](#readme-index)
+- [Index](#index)
   - [Overview](#overview)
   - [Getting Started](#getting-started)
   - [System Requirements](#system-requirements)
@@ -15,7 +15,6 @@ The CTF Documentor is a GUI python application designed to better facilitate the
     - [Creating a Project:](#creating-a-project)
     - [Adding A Target to Scope](#adding-a-target-to-scope)
     - [Enumeration](#enumeration)
-  - [Limitations](#limitations)
   - [Dev Roadmap](#dev-roadmap)
   - [Contributing](#contributing)
 
@@ -82,17 +81,28 @@ With a target set, you are now able to use the pre-set enuneration buttons for a
 ### Enumeration 
 With a target selected, you can now use the enumeration functions. To run a scan, simply navigate between the tool tabs at the bottom of the dashboard. There are several tabs, with more being added in later releases. 
 
+__Current Tool Tabs__
 + Target Discovery: Scan the network to find a target
 + Port Scan: Enumerate services on the target
 + Flags : Enter discovered flags to your documentation
 + Linux Enumeration : Linux specific bash scripts 
 
 
-## Limitations
-For the time being, the CTF Documentor only runs in Kali Linux.
-
 ## Dev Roadmap
-Check back often for updated informaiton about the development roadmap for this project. I am using this project as a template and repository for learning software design, devops, penetration testing, and CTFs
+CTF Documentor is being rapidly developed in an ad-hoc manner. It's primary purpose was to be built as a learning tool. There are several features being planed. Below is a short list of features to be implemented. If you are interested in contributing, please see the contributing guidelines or reach out to me on twitter @butler_devsec
+
+__Future Features__
++  __Enumeration__
+    -    Nmap NSE engine scans
+    -    Searchsploit functionality 
++  __Teams__
+    -    Use ncat as a chat server: Allow multiple CTF Documentor users to chat with one another by using simple ncat chat servers
+    -    Share documentation with one another via ftp or a simple web server
++  __Weaponization__
+    -    Hydra brute force 
+    -    nc or ncat for sending reverse shells 
+
+And much more!
 
 ## Contributing 
 If your interested in contributing to the project, feel free to do so on your on terms. You may reach out on twitter or other platforms for questions or ideas for enhancements.
