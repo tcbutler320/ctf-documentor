@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
-# CTF Automator, the one stop shop tool for CTF's
-# Created by the arpbadger
+# CTF Documentor, the one stop shop tool for CTF's
+# Created by Tyler Butler @butler_devsec & tylerbutler.info
 
 # Import modules
 from Tkinter import *
@@ -13,7 +13,7 @@ from datetime import datetime
 from PIL import ImageTk, Image
 
 # Define Global Variable
-about = 'Welcome to the CTF Automator\n\nThis tool is designed simplify your organization for CTF boot to root events. Creating a new project in CTF Automator will create a new project direcory, and appropriate files. It allows you to perform your scans and dump them into neatly formatted txt files.\n\nWhen your ready to review the output of your scans, CTF Automtor provides an easy way to review what youve done.\n\nHelp Running CTF Automator\n\nFor help, see the readme.me or the help infomrmation on this projects GitHub page.'
+about = 'Welcome to the CTF Documentor\n\nThis tool is designed simplify your organization for CTF boot to root events. Creating a new project in CTF Documentor will create a new project direcory, and appropriate files. It allows you to perform your scans and dump them into neatly formatted txt files.\n\nWhen your ready to review the output of your scans, CTF Automtor provides an easy way to review what youve done.\n\nHelp Running CTF Documentor\n\nFor help, see the readme.me or the help infomrmation on this projects GitHub page.'
 project_name = ""
 target = ""
 rawflag = []
@@ -24,11 +24,13 @@ date = ""
 
 
 # Quit the program
+# Command fully implemented
 def quit_command():
     sys.exit()
     return()
 
 # Get a flag from the user, add it to the flag.txt file and the flag display
+# Command fully implemented
 def add_flag():
     global rawflag
     flag_buffer = ""
@@ -44,12 +46,14 @@ def add_flag():
         return
     return
 
-# Send a flag to a flag server for CTF competitions, function not supported yet
+# Send a flag to a flag server for
+# Function not implemented
 def send_flag():
     help_text.insert("1.0","Send Flag not supported!\nIf you'd like, contribute to this project\n\n")
     return
 
 # On user command, open a new window to enter a project name and directory location
+# Function fully implemented
 def popup_newproject():
     global project_name
     global date
@@ -61,11 +65,11 @@ def popup_newproject():
             help_text.insert("1.0","Creating Project...\n")
             os.mkdir(project_name)
             with open(project_name+'/scans.txt','w') as f:
-                f.write('Date: '+date+'\nCTF Automator\nNew Project: '+project_name+'\n\nScans\n\n')
+                f.write('Date: '+date+'\nCTF Documentor\nNew Project: '+project_name+'\n\nScans\n\n')
                 f.close()
             help_text.insert("1.0","Created output file\n")
             with open(project_name+'/'+'flags.txt','w') as f:
-                f.write('Date'+date+'\nCTF Automator\nNew Project: '+project_name+'\n\nFlags\n\n')
+                f.write('Date'+date+'\nCTF Documentor\nNew Project: '+project_name+'\n\nFlags\n\n')
                 f.close()
             help_text.insert("1.0","Created flag file\n")
             cmd =['pwd']
@@ -95,6 +99,7 @@ def popup_newproject():
     return()
 
 # On uper command, open a new window to choose an existing project to continue working on
+# {!} ISSUE 
 def popup_openproject():
 	global path
 	def open_project():
@@ -116,6 +121,7 @@ def popup_openproject():
 	return
 
 # On button click, run arp-scan to find targets on network, print to display and text file
+# Function fully implemented
 def arp_scan():
     global project_name
     help_text.insert("1.0","Running Arp-Scan...\n")
@@ -134,6 +140,7 @@ def arp_scan():
     return()
 
 # Get user input ipv4 address and set it to the target global variable
+# Function fully implemented
 def add_target():
     global target
     target = target_entry.get()
@@ -150,6 +157,7 @@ def add_target():
         return()
 
 # Run an nmap scan against the target, if no target was selected, tell the user to enter a target or get help
+# Function fully implemented
 def nmap_target():
     global target
     help_text.insert("1.0","Running Nmap\n")
@@ -170,6 +178,7 @@ def nmap_target():
         help_text.insert("1.0","Enter a valid Target\n","RED")
 
 # Run a more intense nmap scan
+# Function fully implemented
 def nmap_intense():
     global target
     help_text.insert("1.0","Running Intense Nmap\n")
@@ -191,6 +200,7 @@ def nmap_intense():
         help_text.insert("1.0","Enter a valid Target\n","RED")
 
 # Run an nmap scan for UDP ports
+# Function fully implemented
 def nmap_udp():
     help_text.insert("1.0","Scanning UDP ports wth Nmap\n")
     target = target_entry.get()
@@ -211,11 +221,13 @@ def nmap_udp():
         help_text.insert("1.0","Enter a valid Target\n","RED")
 
 # Print some helpful information
+# Helpme.md has not been built out yet 
 def helpme():
-    help_text.insert("1.0","Open the readme file for more information. This is a pre-release version of ctf automator, not all features you see are currently supported. Consider making contributions to the project")
+    help_text.insert("1.0","Open the readme file for more information. This is a pre-release version of ctf Documentor, not all features you see are currently supported. Consider making contributions to the project")
     return()
 
 # Run dirb against a target to enumerate web servers, find hidden web directories
+# Function fully implemented
 def dirb():
     global target
     help_text.insert("1.0","Running Dirb\n")
@@ -239,6 +251,7 @@ def dirb():
     return
 
 # Run sparta, this just opens sparta and does not add to project files
+# Function fully implemented
 def sparta():
 
     help_text.insert("1.0","Opening Sparta\n")
@@ -246,17 +259,31 @@ def sparta():
     subprocess.check_output(cmd)
     return
 
+# use netdiscover for target discovery
+# Function not built yet
 def netdiscover():
     return
 
+# Quit CTF Documentor
+# Function fully implemented
 def quit():
     sys.exit()
+
+# Git Clone CTF Playbook
+# {!} Function Not Tested
+def git_playbook():
+    cmd =['git clone https://github.com/tcbutler320/ctf-playbook']
+    try:
+        output = subprocess.check_output(cmd)
+        cmd_2 = ['leafpad /ctf-playbook/README.md']
+    except:
+        print("{!} Exception: Could not connect to GitHub \n Check Internet Settings")
 
 #### Gui Configurations ####
 
 # Main Gui
 main = Tk()
-main.title('CTF Automator')
+main.title('CTF Documentor')
 main.geometry('820x800')
 
 # set style params
@@ -292,7 +319,7 @@ left_top_frame.place(x=0,y=0)
 help_text_label = Label(left_frame,text='Help Bar')
 help_text_label.place(x=10,y=195)
 help_text = Text(left_frame,bg='white',fg='black',height=20,width=20,wrap=WORD)
-help_text.insert(INSERT,'Welcome to the CTF Automator!\n\nStart by creating a new project.This is where useful information will be printed when you run commands.The useful output of scans will show up on your right.\n\n If you need help, click the help button or visit the readme at https://github.com/arpbadger/CTF-automator')
+help_text.insert(INSERT,'Welcome to the CTF Documentor!\n\nStart by creating a new project.This is where useful information will be printed when you run commands.The useful output of scans will show up on your right.\n\n If you need help, click the help button or visit the readme at https://github.com/arpbadger/CTF-Documentor')
 help_text.place(x=10,y=215)
 
 # Add logo image to main window
