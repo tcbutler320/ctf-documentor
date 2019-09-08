@@ -323,8 +323,8 @@ help_text.insert(INSERT,'Welcome to the CTF Documentor!\n\nStart by creating a n
 help_text.place(x=10,y=215)
 
 # Add logo image to main window
-path = 'guy_on_computer.png'
-imgpath = 'guy_on_computer.png'
+path = 'logo2.png'
+imgpath = 'logo2.png'
 img = PhotoImage(file=imgpath)
 img = img.subsample(3)
 
