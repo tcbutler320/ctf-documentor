@@ -419,36 +419,38 @@ nb_tools = ttk.Notebook(main,width=600,height=380)
 nb_tools.place(x=200,y=445)
 
 # Target Discovery Tools Page for Bottom Notebook
+# "Target Discovery" becomes "Reconnaissance 1" in this feature branch
 discovery= ttk.Frame(nb_tools,style='My.TFrame')
-nb_tools.add(discovery, text='Target Discovery')
-discover_frame= Frame(discovery,height=110,width=600)#bg='grey50'
-discover_frame.place(x=0,y=0)
-arp_button= Button(discover_frame, text='Arp Scan',command=arp_scan)
+nb_tools.add(discovery, text='Reconnaissance 1')
+reconnaissance_1_frame= Frame(discovery,height=110,width=600)#bg='grey50'
+reconnaissance_1_frame.place(x=0,y=0)
+arp_button= Button(reconnaissance_1_frame, text='Arp Scan',command=arp_scan)
 arp_button.place(x=5,y=5)
-netdiscover_button= Button(discover_frame, text='Net Discover')
+netdiscover_button= Button(reconnaissance_1_frame, text='Net Discover')
 netdiscover_button.place(x=105,y=5)
-netstat_button= Button(discover_frame, text='Net Stat')
+netstat_button= Button(reconnaissance_1_frame, text='Net Stat')
 netstat_button.place(x=235,y=5)
-getmyip_button= Button(discover_frame, text='Get MyIP',command=get_myip)
+getmyip_button= Button(reconnaissance_1_frame, text='Get MyIP',command=get_myip)
 getmyip_button.place(x=350,y=5)
 
 
 # Port and Service Scan for Bottom Notebook
+# "Por and Service Scan" becomes "Reconnaissance 2" in this feature branch 
 port_scan= ttk.Frame(nb_tools,style='My.TFrame')
-nb_tools.add(port_scan, text='Port Scan')
-portscan_frame= Frame(port_scan,height=110,width=600)#bg='grey50'
-portscan_frame.place(x=0,y=0)
+nb_tools.add(port_scan, text='Recconnaissance 2')
+reconnaissance_2_frame= Frame(port_scan,height=110,width=600)#bg='grey50'
+reconnaissance_2_frame.place(x=0,y=0)
 target_entry = Entry(port_scan)
 target_entry.place(x=135,y=50)
 target_elable= Label(port_scan,text='Enter Target')
 target_elable.place(x=1,y=50)
-set_target_button= Button(portscan_frame,text='Set Target',command=add_target)
+set_target_button= Button(reconnaissance_2_frame,text='Set Target',command=add_target)
 set_target_button.place(x=335,y=50)
-nmap_button= Button(portscan_frame, text='Nmap',command=nmap_target)
+nmap_button= Button(reconnaissance_2_frame, text='Nmap',command=nmap_target)
 nmap_button.place(x=5,y=5)
-nmap_button= Button(portscan_frame, text='Nmap Intense',command=nmap_intense)
+nmap_button= Button(reconnaissance_2_frame, text='Nmap Intense',command=nmap_intense)
 nmap_button.place(x=105,y=5)
-nmap_button= Button(portscan_frame, text='Nmap UDP', command=nmap_udp)
+nmap_button= Button(reconnaissance_2_frame, text='Nmap UDP', command=nmap_udp)
 nmap_button.place(x=235,y=5)
 
 # Flag tab for bottom notebook
