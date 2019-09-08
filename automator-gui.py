@@ -228,6 +228,7 @@ def helpme():
 
 # Run dirb against a target to enumerate web servers, find hidden web directories
 # Function fully implemented
+# test
 def dirb():
     global target
     help_text.insert("1.0","Running Dirb\n")
@@ -278,6 +279,25 @@ def git_playbook():
         cmd_2 = ['leafpad /ctf-playbook/README.md']
     except:
         print("{!} Exception: Could not connect to GitHub \n Check Internet Settings")
+
+def get_myip():
+    global target
+    help_text.insert("1.0","Getting IP\n")
+    try:
+		cmd =['ifconfig']
+		returned_value = subprocess.check_output(cmd)
+		output_text.insert("1.0",returned_value.decode("utf-8"))
+		write_value = str(returned_value.decode("utf-8"))
+		with open(project_name+'/scans.txt','a') as f:
+		    f.write('\nGet MyIp Scan Results\n=========================================\n\n')
+		    f.write(write_value)
+		    f.close()
+		help_text.insert("1.0","IP Found! Its " + write_value + "\n")
+		return
+    except:
+		print("{!} Exception")
+    return
+
 
 #### Gui Configurations ####
 
@@ -409,6 +429,9 @@ netdiscover_button= Button(discover_frame, text='Net Discover')
 netdiscover_button.place(x=105,y=5)
 netstat_button= Button(discover_frame, text='Net Stat')
 netstat_button.place(x=235,y=5)
+getmyip_button= Button(discover_frame, text='Get MyIP',command=get_myip)
+getmyip_button.place(x=350,y=5)
+
 
 # Port and Service Scan for Bottom Notebook
 port_scan= ttk.Frame(nb_tools,style='My.TFrame')
