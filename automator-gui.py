@@ -148,7 +148,7 @@ def add_target():
         help_text.insert("1.0","Setting Target...\n")
         os.mkdir(project_name)
         with open(project_name+'/scans.txt','w') as f:
-            f.write('CTF Badger\nNew Targe Added:'+target)
+            f.write('CTF Documentor\nNew Target Added:'+target)
             f.close()
         return()
     else:
@@ -339,7 +339,7 @@ left_top_frame.place(x=0,y=0)
 help_text_label = Label(left_frame,text='Help Bar')
 help_text_label.place(x=10,y=195)
 help_text = Text(left_frame,bg='white',fg='black',height=20,width=20,wrap=WORD)
-help_text.insert(INSERT,'Welcome to the CTF Documentor!\n\nStart by creating a new project.This is where useful information will be printed when you run commands.The useful output of scans will show up on your right.\n\n If you need help, click the help button or visit the readme at https://github.com/arpbadger/CTF-Documentor')
+help_text.insert(INSERT,'Welcome to the CTF Documentor!\n\nStart by creating a new project.This is where useful information will be printed when you run commands.The useful output of scans will show up on your right.\n\n If you need help, click the help button or visit the readme at https://github.com/tcbutler320/ctf-documentor')
 help_text.place(x=10,y=215)
 
 # Add logo image to main window
@@ -435,7 +435,7 @@ getmyip_button.place(x=350,y=5)
 
 
 # Port and Service Scan for Bottom Notebook
-# "Por and Service Scan" becomes "Reconnaissance 2" in this feature branch 
+# "Port and Service Scan" becomes "Reconnaissance 2" in this feature branch 
 port_scan= ttk.Frame(nb_tools,style='My.TFrame')
 nb_tools.add(port_scan, text='Reconnaissance 2')
 reconnaissance_2_frame= Frame(port_scan,height=110,width=600)#bg='grey50'
@@ -455,11 +455,11 @@ nmap_button.place(x=235,y=5)
 
 # Tools for Linux Enumeration
 # "Enumeration" will now be "Reconnaissance 3" in this feature branch
-linux_enum = ttk.Frame(nb_tools, style='My.TFrame')
-nb_tools.add(linux_enum,text= 'Reconnaissance 3)
-reconnaissance_3_frame = Frame(linux_enum, height= 110, width =600)
+reconnaissance_3 = ttk.Frame(nb_tools, style='My.TFrame')
+nb_tools.add(reconnaissance_3,text= 'Reconnaissance 3)
+reconnaissance_3_frame = Frame(reconnaissance_3, height= 110, width =600)
 reconnaissance_3_frame.place(x=0,y=0)
-enum1 = Button(reconnaissance_3_frame,text='Bash Badger Script',command='run_bashbadger')
+enum1 = Button(reconnaissance_3_frame,text='Example',command='example')
 enum1.place(x=5,y=5)
 enum2 = Button(reconnaissance_3_frame,text='Dirb',command=dirb)
 enum2.place(x=200,y=5)
