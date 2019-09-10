@@ -456,7 +456,7 @@ nmap_button.place(x=235,y=5)
 # Tools for Linux Enumeration
 # "Enumeration" will now be "Reconnaissance 3" in this feature branch
 reconnaissance_3 = ttk.Frame(nb_tools, style='My.TFrame')
-nb_tools.add(reconnaissance_3,text= 'Reconnaissance 3)
+nb_tools.add(reconnaissance_3,text= 'Reconnaissance 3')
 reconnaissance_3_frame = Frame(reconnaissance_3, height= 110, width =600)
 reconnaissance_3_frame.place(x=0,y=0)
 enum1 = Button(reconnaissance_3_frame,text='Example',command='example')
@@ -466,7 +466,7 @@ enum2.place(x=200,y=5)
 
 # Added weaponization tool page for this feature branch
 weaponization_tools = ttk.Frame(nb_tools, style='My.TFrame')
-nb_tools.add(weaponization_tools,text= 'Other Tools')
+nb_tools.add(weaponization_tools,text= 'Weaponization')
 other_frame = Frame(weaponization_tools, height= 110, width =600)
 other_frame.place(x=0,y=0)
 sparta_button = Button(weaponization_tools,text='Sparta',command=sparta)
