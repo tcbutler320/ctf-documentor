@@ -464,6 +464,15 @@ enum1.place(x=5,y=5)
 enum2 = Button(reconnaissance_3_frame,text='Dirb',command=dirb)
 enum2.place(x=200,y=5)
 
+# Added weaponization tool page for this feature branch
+weaponization_tools = ttk.Frame(nb_tools, style='My.TFrame')
+nb_tools.add(weaponization_tools,text= 'Other Tools')
+other_frame = Frame(weaponization_tools, height= 110, width =600)
+other_frame.place(x=0,y=0)
+sparta_button = Button(weaponization_tools,text='Sparta',command=sparta)
+sparta_button.place(x=5,y=5)
+
+
 # Other random tools
 other_tools = ttk.Frame(nb_tools, style='My.TFrame')
 nb_tools.add(other_tools,text= 'Other Tools')
