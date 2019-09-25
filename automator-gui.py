@@ -19,6 +19,7 @@ target = ""
 rawflag = []
 path = ""
 date = ""
+adaptor = ""
 
 #### Program Functions ####
 
@@ -123,21 +124,21 @@ def popup_openproject():
 # On button click, run arp-scan to find targets on network, print to display and text file
 # Function fully implemented
 def arp_scan():
-    global project_name
-    help_text.insert("1.0","Running Arp-Scan...\n")
-    cmd =['arp-scan','-l']
-    returned_value = subprocess.check_output(cmd)
-    output_text.insert("1.0",returned_value.decode("utf-8"))
-    write_value = str(returned_value.decode("utf-8"))
-    print(write_value)
-    if 1 == 1:
-        with open(project_name+'/scans.txt','a') as f:
-            f.write('\nARP Scan Results\n\n=============================\n\n')
-            f.write(write_value)
-            help_text.insert("1.0","Targets Acquire,Located in Outut\n")
-            f.close()
-        return()
-    return()
+	global project_name, adaptor
+	help_text.insert("1.0","Running Arp-Scan...\n")
+	cmd =['arp-scan','-I',adaptor,'-l']
+	returned_value = subprocess.check_output(cmd)
+	output_text.insert("1.0",returned_value.decode("utf-8"))
+	write_value = str(returned_value.decode("utf-8"))
+	print(write_value)
+	if 1 == 1:
+		with open(project_name+'/scans.txt','a') as f:
+			f.write('\nARP Scan Results\n\n=============================\n\n')
+			f.write(write_value)
+			help_text.insert("1.0","Targets Acquire,Located in Outut\n")
+			f.close()
+		return()
+	return()
 
 # Get user input ipv4 address and set it to the target global variable
 # Function fully implemented
@@ -263,7 +264,21 @@ def sparta():
 # use netdiscover for target discovery
 # Function not built yet
 def netdiscover():
-    return
+	global project_name, adaptor
+	help_text.insert("1.0","Running Netdiscover...\n")
+	cmd =['netdiscover','-i',adaptor,'-f']
+	returned_value = subprocess.check_output(cmd)
+	output_text.insert("1.0",returned_value.decode("utf-8"))
+	write_value = str(returned_value.decode("utf-8"))
+	print(write_value)
+	if 1 == 1:
+		with open(project_name+'/scans.txt','a') as f:
+			f.write('\nNetdiscover Scan Results\n\n=============================\n\n')
+			f.write(write_value)
+			help_text.insert("1.0","Targets Acquire,Located in Outut\n")
+			f.close()
+		return()
+	return()
 
 # Quit CTF Documentor
 # Function fully implemented
@@ -297,6 +312,20 @@ def get_myip():
     except:
 		print("{!} Exception")
     return
+
+def set_adaptor():
+	global adaptor
+	adaptor = adaptor_entry.get()
+	if len(adaptor) > 0 :
+		help_text.insert("1.0","Setting Adaptor...\n")
+		with open(project_name+'/scans.txt','w') as f:
+			f.write('CTF Documentor\nNew Adaptor Set:'+adaptor)
+			f.close()
+			return()
+	else:
+		help_text.tag_config('RED', foreground='red')
+		help_text.insert("1.0","You must enter a valid adaptor\n","RED")
+	return()
 
 
 #### Gui Configurations ####
@@ -332,31 +361,36 @@ main.config(menu=menubar)
 # Main Left Frame
 left_frame= Frame(main,width=200,height=800)
 left_frame.place(x=0,y=0)
-left_top_frame= Frame(left_frame,width=200,height=100)
+left_top_frame= Frame(left_frame,width=200,height=400)
 left_top_frame.place(x=0,y=0)
 
 # Help Output Text Bar and Label
 help_text_label = Label(left_frame,text='Help Bar')
-help_text_label.place(x=10,y=195)
-help_text = Text(left_frame,bg='white',fg='black',height=20,width=20,wrap=WORD)
+help_text_label.place(x=10,y=230)
+help_text = Text(left_frame,bg='black',fg='white',height=20,width=20,wrap=WORD)
 help_text.insert(INSERT,'Welcome to the CTF Documentor!\n\nStart by creating a new project.This is where useful information will be printed when you run commands.The useful output of scans will show up on your right.\n\n If you need help, click the help button or visit the readme at https://github.com/tcbutler320/ctf-documentor')
-help_text.place(x=10,y=215)
+help_text.place(x=10,y=250)
 
 # Add logo image to main window
 path = 'logo2.png'
 imgpath = 'logo2.png'
 img = PhotoImage(file=imgpath)
 img = img.subsample(3)
-
 project_name_label = Label(left_frame, image=img)
 project_name_label.config(font=("Courier", 20))
-project_name_label.place(x=2 ,y=10)
+project_name_label.place(x=10 ,y=2)
+
+# Set Adaptor Button
+set_adaptor_button= ttk.Button(text='Set Adaptor',style='My.TButton',command=set_adaptor)
+set_adaptor_button.place(x=10,y=610)
+adaptor_entry = Entry(left_frame)
+adaptor_entry.place(x=10, y=650)
 
 # Main Buttons
 new_project_button= ttk.Button(text='New Project',style='My.TButton',command=popup_newproject)
-new_project_button.place(x=2,y=150)
+new_project_button.place(x=2,y=185)
 open_project_button= ttk.Button(text='Open Project',style='My.TButton', command=popup_openproject)
-open_project_button.place(x=100,y=150)
+open_project_button.place(x=100,y=185)
 
 # Main Botton Frame
 botton_title_frame= Frame(main,width=600,height=20)# bg='grey12',
@@ -381,32 +415,46 @@ nb.place(x=200,y=0)
 # Page 1:Home Page
 home= ttk.Frame(nb,style='My.TFrame')
 nb.add(home, text='Main')
-output_text = Text(home,bg='white',fg='black',height=400,width=200,wrap=WORD)
+output_text = Text(home,bg='black',fg='white',height=400,width=200,wrap=WORD)
 output_text.insert(INSERT,"You'll see the output of your scans here\n")
 output_text.place(x=0,y=0)
 
 # Page 2: Flags
 flags= ttk.Frame(nb)
 nb.add(flags,text='Flags')
-flags_text = Text(flags,bg='white',fg='black',height=400,width=600,wrap=WORD)
+flags_text = Text(flags,bg='black',fg='white',height=400,width=600,wrap=WORD)
 flags_text.insert(INSERT,'Found Flags will be added here\n')
 flags_text.place(x=0,y=0)
 
 # Page 3: Compromat
 compromat = ttk.Frame(nb)
 nb.add(compromat,text='Compromat')
-compromat_text = Text(compromat,bg='white',fg='black',height=400,width=600,wrap=WORD)
+compromat_text = Text(compromat,bg='black',fg='white',height=400,width=600,wrap=WORD)
 compromat_text.insert(INSERT,"""The Compromat is a selection of all the compromising materials you've found. This includes things like vulnerabilities, backdoors, usernames and passwords, etc\n""")
 compromat_text.place(x=0,y=0)
 
 # Page 4: Chat
 page4= ttk.Frame(nb)
 nb.add(page4, text='Chat')
+chat_text = Label(page4,text="To chat with other users of ctf-documentor, start listener\n")
+chat_text.place(x=5,y=5)
+
+lport_text = Label(page4, text="Set Listener Port")
+lport_text.place(x=5, y=25)
+
+lport_entry = Entry(page4)
+lport_entry.place(x=175, y=25)
+
+start_listener_button = Button(page4, text="Set Port")
+start_listener_button.place(x=5,y=50)
+
+start_listener_button = Button(page4, text="Start Listener")
+start_listener_button.place(x=175,y=50)
 
 # Page 5: About
 about= ttk.Frame(nb)
 nb.add(about, text='About')
-about_text = Text(about,bg='white',fg='black',height=400,width=600,wrap=WORD)
+about_text = Text(about,bg='black',fg='white',height=400,width=600,wrap=WORD)
 about_text.insert(INSERT,"This is the about page\n")
 about_text.place(x=0,y=0)
 
@@ -422,42 +470,51 @@ nb_tools.place(x=200,y=445)
 # "Target Discovery" becomes "Reconnaissance 1" in this feature branch
 discovery= ttk.Frame(nb_tools,style='My.TFrame')
 nb_tools.add(discovery, text='Reconnaissance 1')
-reconnaissance_1_frame= Frame(discovery,height=110,width=600)#bg='grey50'
+reconnaissance_1_frame= Frame(discovery,height=320,width=600)#bg='grey50'
 reconnaissance_1_frame.place(x=0,y=0)
+recon_label = Label(discovery, text= "Discover Target")
+recon_label.place(x=5,y=5)
 arp_button= Button(reconnaissance_1_frame, text='Arp Scan',command=arp_scan)
-arp_button.place(x=5,y=5)
-netdiscover_button= Button(reconnaissance_1_frame, text='Net Discover')
-netdiscover_button.place(x=105,y=5)
+arp_button.place(x=5,y=55)
+netdiscover_button= Button(reconnaissance_1_frame, text='Netdiscover')
+netdiscover_button.place(x=5,y=105)
 netstat_button= Button(reconnaissance_1_frame, text='Net Stat')
-netstat_button.place(x=235,y=5)
+netstat_button.place(x=5,y=155)
 getmyip_button= Button(reconnaissance_1_frame, text='Get MyIP',command=get_myip)
-getmyip_button.place(x=350,y=5)
+getmyip_button.place(x=5,y=205)
 
 
 # Port and Service Scan for Bottom Notebook
 # "Port and Service Scan" becomes "Reconnaissance 2" in this feature branch 
 port_scan= ttk.Frame(nb_tools,style='My.TFrame')
 nb_tools.add(port_scan, text='Reconnaissance 2')
-reconnaissance_2_frame= Frame(port_scan,height=110,width=600)#bg='grey50'
+reconnaissance_2_frame= Frame(port_scan,height=320,width=600)#bg='grey50'
 reconnaissance_2_frame.place(x=0,y=0)
-target_entry = Entry(port_scan)
-target_entry.place(x=135,y=50)
 target_elable= Label(port_scan,text='Enter Target')
-target_elable.place(x=1,y=50)
+target_elable.place(x=1,y=5)
+target_entry = Entry(port_scan)
+target_entry.place(x=135,y=5)
 set_target_button= Button(reconnaissance_2_frame,text='Set Target',command=add_target)
-set_target_button.place(x=335,y=50)
+set_target_button.place(x=335,y=5)
+nmap_op_label = Label(reconnaissance_2_frame, text = "Nmap Enumeration Options")
+nmap_op_label.place(x=5,y=55)
 nmap_button= Button(reconnaissance_2_frame, text='Nmap',command=nmap_target)
-nmap_button.place(x=5,y=5)
+nmap_button.place(x=5,y=105)
 nmap_button= Button(reconnaissance_2_frame, text='Nmap Intense',command=nmap_intense)
-nmap_button.place(x=105,y=5)
+nmap_button.place(x=5,y=155)
 nmap_button= Button(reconnaissance_2_frame, text='Nmap UDP', command=nmap_udp)
-nmap_button.place(x=235,y=5)
+nmap_button.place(x=5,y=205)
+
+nse_op_label = Label(reconnaissance_2_frame, text = "NSE Scripting Engine")
+nse_op_label.place(x=200,y=55)
+nse_discovery= Button(reconnaissance_2_frame, text='NSE Discovery') #command=nse_discovery
+nse_discovery.place(x=200,y=105)
 
 # Tools for Linux Enumeration
 # "Enumeration" will now be "Reconnaissance 3" in this feature branch
 reconnaissance_3 = ttk.Frame(nb_tools, style='My.TFrame')
 nb_tools.add(reconnaissance_3,text= 'Reconnaissance 3')
-reconnaissance_3_frame = Frame(reconnaissance_3, height= 110, width =600)
+reconnaissance_3_frame = Frame(reconnaissance_3, height= 320, width =600)
 reconnaissance_3_frame.place(x=0,y=0)
 enum1 = Button(reconnaissance_3_frame,text='Example',command='example')
 enum1.place(x=5,y=5)
@@ -467,7 +524,7 @@ enum2.place(x=200,y=5)
 # Added weaponization tool page for this feature branch
 weaponization_tools = ttk.Frame(nb_tools, style='My.TFrame')
 nb_tools.add(weaponization_tools,text= 'Weaponization')
-other_frame = Frame(weaponization_tools, height= 110, width =600)
+other_frame = Frame(weaponization_tools, height= 320, width =600)
 other_frame.place(x=0,y=0)
 sparta_button = Button(weaponization_tools,text='Sparta',command=sparta)
 sparta_button.place(x=5,y=5)
@@ -476,7 +533,7 @@ sparta_button.place(x=5,y=5)
 # Other random tools
 other_tools = ttk.Frame(nb_tools, style='My.TFrame')
 nb_tools.add(other_tools,text= 'Other Tools')
-other_frame = Frame(other_tools, height= 110, width =600)
+other_frame = Frame(other_tools, height= 320, width =600)
 other_frame.place(x=0,y=0)
 sparta_button = Button(other_tools,text='Sparta',command=sparta)
 sparta_button.place(x=5,y=5)
@@ -484,7 +541,7 @@ sparta_button.place(x=5,y=5)
 # Flag tab for bottom notebook
 flags = ttk.Frame(nb_tools,style='My.TFrame')
 nb_tools.add(flags, text='Flags')
-flags_frame = Frame(flags,height=110,width=600)#bg='grey50'
+flags_frame = Frame(flags,height=320,width=600)#bg='grey50'
 flags_frame.place(x=0,y=0)
 flags_entry = Entry(flags)
 flags_entry.place(x=100,y=30)
