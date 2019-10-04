@@ -1,0 +1,19 @@
+The dependancies required for this project are as follows:
+
+1.) Tkinter
+2.) PIL
+
+For Windows, run the following commands to install the dependancies:
+
+pip install Pillow
+
+For Ubuntu users, you can do the same for these set of commands:
+
+sudo apt-get install python3-tk
+(sudo apt-get install python-PIL
+or
+sudo apt-get install python-pil
+or
+sudo pip install pillow
+or
+sudo easy_install pillow)
